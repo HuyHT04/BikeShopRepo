@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BikeShop.Application/BikeShop.Application.csproj" />
+    <Project Path="src/BikeShop.Domain/BikeShop.Domain.csproj" />
+    <Project Path="src/BikeShop.Infrastructure/BikeShop.Infrastructure.csproj" />
+    <Project Path="src/BikeShop.Web/BikeShop.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BikeShop.Tests/BikeShop.Tests.csproj" />
+  </Folder>
+</Solution>

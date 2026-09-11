@@ -1,0 +1,41 @@
+## .NET and Visual Studio
+bin/
+obj/
+.vs/
+.vscode/
+TestResults/
+coverage/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build and publish output
+[Dd]ebug/
+[Rr]elease/
+publish/
+artifacts/
+
+## Local configuration and secrets
+appsettings.Local.json
+appsettings.*.local.json
+.env
+.env.*
+secrets.json
+
+## Database local files and backups
+*.mdf
+*.ldf
+*.bak
+*.bacpac
+
+## IDE and operating system
+.idea/
+*.DotSettings.user
+.DS_Store
+Thumbs.db
+
+## Temporary documents and draw.io backups
+~$*.docx
+*.drawio.bkp
+*.tmp
