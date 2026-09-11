@@ -215,22 +215,36 @@ add_table(doc, ["Thành phần", "Quyết định"], [
 ], [4.0, 12.4])
 doc.add_paragraph("Luồng phụ thuộc chuẩn: Web → Application → Domain; Infrastructure triển khai data access và được Web đăng ký bằng dependency injection. Không đưa Entity Framework Core vào Domain.")
 
-doc.add_heading("5 Thiết kế database", level=1)
+doc.add_heading("5 Thiết kế database và data dictionary", level=1)
+doc.add_paragraph(
+    "Tất cả khóa chính kiểu int hoặc bigint của bảng nghiệp vụ được SQL Server sinh tự động bằng IDENTITY(1,1). "
+    "Riêng AspNetUsers.Id và AspNetRoles.Id là nvarchar(450) vì ASP.NET Core Identity dùng khóa chuỗi; ứng dụng không yêu cầu người dùng tự nhập các giá trị này."
+)
 db_rows = [
-    ["Categories", "Danh mục sản phẩm"], ["Brands", "Thương hiệu"], ["Products", "Thông tin sản phẩm chung"],
-    ["ProductVariants", "SKU, màu, kích thước, giá, tồn kho và rowversion"], ["ProductImages", "Nhiều hình ảnh cho sản phẩm"],
-    ["InventoryTransactions", "Lịch sử nhập, trừ và hoàn kho"], ["Addresses", "Địa chỉ của khách hàng"],
-    ["Carts", "Một giỏ hiện tại cho mỗi khách"], ["CartItems", "Biến thể và số lượng trong giỏ"],
-    ["Orders", "Đơn hàng và snapshot địa chỉ giao"], ["OrderItems", "Snapshot tên, SKU, giá và số lượng"],
-    ["OrderStatusHistories", "Audit chuyển trạng thái"], ["AspNet tables", "Người dùng, role, claim, login và token do Identity quản lý"],
+    ["Categories", "Id int IDENTITY PK\nName nvarchar(100)\nSlug varchar(120) UQ\nDescription nvarchar(500) NULL\nIsActive bit", "Danh mục sản phẩm"],
+    ["Brands", "Id int IDENTITY PK\nName nvarchar(100)\nSlug varchar(120) UQ\nIsActive bit", "Thương hiệu"],
+    ["Products", "Id int IDENTITY PK\nCategoryId int FK\nBrandId int FK\nName nvarchar(200)\nSlug varchar(220) UQ\nDescription nvarchar(max) NULL\nIsActive bit\nCreatedAt datetime2", "Thông tin chung; ngừng bán bằng IsActive"],
+    ["ProductVariants", "Id int IDENTITY PK\nProductId int FK\nSku varchar(50) UQ\nColor nvarchar(50) NULL\nSize nvarchar(30) NULL\nPrice decimal(18,2)\nStockQuantity int\nIsActive bit\nRowVersion rowversion", "Đơn vị thực tế được bán và giữ tồn kho"],
+    ["ProductImages", "Id int IDENTITY PK\nProductId int FK\nImageUrl nvarchar(500)\nAltText nvarchar(200) NULL\nSortOrder int", "Nhiều ảnh cho một sản phẩm"],
+    ["InventoryTransactions", "Id bigint IDENTITY PK\nProductVariantId int FK\nQuantityChange int\nReason nvarchar(100)\nReferenceCode nvarchar(50) NULL\nCreatedByUserId nvarchar(450) FK NULL\nCreatedAt datetime2", "Audit nhập, trừ và hoàn kho"],
+    ["Addresses", "Id int IDENTITY PK\nUserId nvarchar(450) FK\nRecipientName nvarchar(120)\nPhoneNumber varchar(20)\nAddressLine nvarchar(250)\nWard nvarchar(100)\nDistrict nvarchar(100)\nProvince nvarchar(100)\nIsDefault bit", "Địa chỉ lưu của khách hàng"],
+    ["Carts", "Id int IDENTITY PK\nUserId nvarchar(450) FK UQ\nUpdatedAt datetime2", "Một giỏ hiện tại cho mỗi khách"],
+    ["CartItems", "Id int IDENTITY PK\nCartId int FK\nProductVariantId int FK\nQuantity int", "UQ CartId + ProductVariantId; Quantity > 0"],
+    ["Orders", "Id bigint IDENTITY PK\nOrderCode varchar(30) UQ\nUserId nvarchar(450) FK\nStatus int\nRecipientName nvarchar(120)\nPhoneNumber varchar(20)\nShippingAddress nvarchar(600)\nSubtotal decimal(18,2)\nShippingFee decimal(18,2)\nTotalAmount decimal(18,2)\nCustomerNote nvarchar(500) NULL\nCreatedAt, UpdatedAt datetime2", "Đơn hàng và snapshot địa chỉ giao"],
+    ["OrderItems", "Id bigint IDENTITY PK\nOrderId bigint FK\nProductVariantId int FK\nProductName nvarchar(200)\nSku varchar(50)\nVariantDescription nvarchar(120) NULL\nUnitPrice decimal(18,2)\nQuantity int\nLineTotal decimal(18,2)", "Snapshot sản phẩm và giá lúc mua"],
+    ["OrderStatusHistories", "Id bigint IDENTITY PK\nOrderId bigint FK\nOldStatus int\nNewStatus int\nNote nvarchar(500) NULL\nChangedByUserId nvarchar(450) FK NULL\nChangedAt datetime2", "Audit mọi lần đổi trạng thái"],
+    ["AspNetUsers", "Id nvarchar(450) PK\nFullName nvarchar(150) NULL\nIsActive bit\nCreatedAt datetime2\nUserName, Email, PasswordHash và các cột Identity", "Identity sinh khóa chuỗi và hash mật khẩu"],
+    ["AspNetRoles", "Id nvarchar(450) PK\nName nvarchar(256)\nNormalizedName nvarchar(256) UQ\nConcurrencyStamp nvarchar(max)", "Role Admin và Customer"],
+    ["Identity mapping", "AspNetUserRoles\nAspNetUserClaims\nAspNetRoleClaims\nAspNetUserLogins\nAspNetUserTokens", "Bảng liên kết và xác thực do Identity quản lý"],
 ]
-add_table(doc, ["Bảng", "Trách nhiệm"], db_rows, [5.2, 11.2])
+add_table(doc, ["Bảng", "Cột và kiểu dữ liệu", "Mục đích và ràng buộc"], db_rows, [3.2, 8.0, 5.2])
 add_bullets(doc, [
     "Giá dùng decimal(18,2); SKU, slug và mã đơn có unique constraint.",
     "Sản phẩm đã phát sinh đơn được ngừng bán bằng IsActive thay vì hard delete.",
     "OrderItem lưu snapshot để lịch sử đơn không thay đổi khi catalog được sửa.",
     "Checkout dùng transaction và kiểm tra RowVersion để hạn chế oversell.",
-    "DATA_CREATE.sql tạo schema; DATA_INSERT.sql thêm role và catalog demo có thể chạy lại."
+    "DATA_CREATE.sql tạo schema; DATA_INSERT.sql thêm role và catalog demo có thể chạy lại.",
+    "Entity Framework Core được cấu hình ValueGeneratedOnAdd cho toàn bộ khóa số để khớp IDENTITY(1,1)."
 ])
 
 doc.add_heading("6 Yêu cầu chất lượng", level=1)

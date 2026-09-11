@@ -29,7 +29,7 @@ Website bán xe đạp và phụ kiện đơn giản cho môn SWP391. Hệ thố
 - `BikeShop.Domain`: entity, enum và business rules độc lập.
 - `BikeShop.Infrastructure`: EF Core, Identity, SQL Server và tích hợp ngoài.
 - `BikeShop.Tests`: unit/integration tests.
-- `database`: script tạo schema, dữ liệu mẫu và ERD draw.io.
+- `database`: script tạo schema và dữ liệu mẫu; data dictionary nằm trong tài liệu dự án.
 - `docs`: tài liệu dự án và quy ước làm việc.
 
 ## Git workflow

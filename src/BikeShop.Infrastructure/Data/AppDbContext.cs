@@ -25,6 +25,19 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Category>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<Brand>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<Product>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<ProductVariant>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<ProductImage>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<InventoryTransaction>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<Address>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<Cart>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<CartItem>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<Order>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<OrderItem>().Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Entity<OrderStatusHistory>().Property(x => x.Id).ValueGeneratedOnAdd();
+
         builder.Entity<Category>().HasIndex(x => x.Slug).IsUnique();
         builder.Entity<Brand>().HasIndex(x => x.Slug).IsUnique();
         builder.Entity<Product>().HasIndex(x => x.Slug).IsUnique();
