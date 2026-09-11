@@ -139,7 +139,8 @@ doc.add_paragraph(
 doc.add_heading("1 Mục tiêu và phạm vi", level=1)
 doc.add_paragraph(
     "BikeShop tham khảo cách tổ chức catalog của xedap.vn nhưng sử dụng nội dung và giao diện riêng. "
-    "Hệ thống phục vụ Guest, Customer và Admin; thanh toán COD là phương thức duy nhất trong phạm vi chính."
+    "Hệ thống phục vụ Guest, Customer, Staff và Admin; thanh toán COD là phương thức duy nhất trong phạm vi chính. "
+    "Guest là người chưa đăng nhập, không phải role tài khoản trong database."
 )
 add_table(doc, ["Trong phạm vi", "Ngoài phạm vi ban đầu"], [[
     "Catalog, biến thể, tìm kiếm, lọc, giỏ hàng, checkout COD, quản lý đơn, tồn kho và dashboard",
@@ -150,7 +151,8 @@ doc.add_heading("2 Actor và workflow", level=1)
 add_table(doc, ["Actor", "Quyền chính"], [
     ["Guest", "Xem trang chủ, danh sách, chi tiết, tìm kiếm và lọc sản phẩm"],
     ["Customer", "Quản lý tài khoản, địa chỉ, giỏ hàng, đặt hàng COD, xem và hủy đơn hợp lệ"],
-    ["Admin", "Quản lý catalog, tồn kho, tài khoản, quy trình đơn và dashboard"],
+    ["Staff", "Xử lý đơn hàng, cập nhật trạng thái, điều chỉnh tồn kho và xem cảnh báo sắp hết hàng"],
+    ["Admin", "Quản lý catalog, tài khoản nhân viên, phân quyền, toàn bộ đơn hàng và dashboard"],
 ], [3.4, 13.0])
 
 doc.add_heading("2.1 Workflow 0 Khởi tạo dữ liệu", level=2)
@@ -164,7 +166,7 @@ add_bullets(doc, [
     "Khi đơn được hủy hợp lệ, hoàn tồn kho và ghi lịch sử."
 ])
 doc.add_heading("2.3 Workflow 2 Xử lý đơn và dashboard", level=2)
-doc.add_paragraph("Pending → Confirmed → Packing → Shipping → Completed. Đơn Pending hoặc Confirmed có thể chuyển sang Cancelled theo quyền và business rule.")
+doc.add_paragraph("Staff xử lý Pending → Confirmed → Packing → Shipping → Completed. Đơn Pending hoặc Confirmed có thể chuyển sang Cancelled theo quyền và business rule. Admin có thể giám sát toàn bộ hàng đợi và dashboard.")
 
 doc.add_page_break()
 doc.add_heading("3 Danh sách chức năng và phân công", level=1)
@@ -174,7 +176,7 @@ function_rows = [
     ["Nguyễn Phước Hậu", "Account", "F03", "Xem và cập nhật hồ sơ"],
     ["Nguyễn Phước Hậu", "Account", "F04", "Đổi mật khẩu"],
     ["Nguyễn Phước Hậu", "Account", "F05", "Quản lý địa chỉ giao hàng"],
-    ["Nguyễn Phước Hậu", "Account", "F06", "Admin khóa, mở và phân quyền tài khoản"],
+    ["Nguyễn Phước Hậu", "Account", "F06", "Admin tạo, khóa, mở và gán role Staff cho tài khoản nội bộ"],
     ["Hà Thanh Huy", "Catalog", "F07", "Trang chủ và nhóm sản phẩm nổi bật"],
     ["Hà Thanh Huy", "Catalog", "F08", "Danh sách sản phẩm và phân trang"],
     ["Hà Thanh Huy", "Catalog", "F09", "Chi tiết và chọn biến thể"],
@@ -192,13 +194,13 @@ function_rows = [
     ["Huỳnh Vương Khánh", "Admin Catalog", "F21", "Quản lý sản phẩm"],
     ["Huỳnh Vương Khánh", "Admin Catalog", "F22", "Quản lý biến thể"],
     ["Huỳnh Vương Khánh", "Admin Catalog", "F23", "Quản lý hình ảnh"],
-    ["Huỳnh Vương Khánh", "Admin Catalog", "F24", "Điều chỉnh và xem lịch sử tồn kho"],
+    ["Huỳnh Vương Khánh", "Catalog Inventory", "F24", "Staff hoặc Admin điều chỉnh và xem lịch sử tồn kho"],
     ["Phạm Đình Đăng Khoa", "Orders Reports", "F25", "Khách xem lịch sử và chi tiết đơn"],
     ["Phạm Đình Đăng Khoa", "Orders Reports", "F26", "Khách hủy đơn hợp lệ"],
-    ["Phạm Đình Đăng Khoa", "Orders Reports", "F27", "Admin tìm và lọc hàng đợi đơn"],
-    ["Phạm Đình Đăng Khoa", "Orders Reports", "F28", "Chuyển trạng thái và ghi lịch sử"],
+    ["Phạm Đình Đăng Khoa", "Orders Reports", "F27", "Staff hoặc Admin tìm và lọc hàng đợi đơn"],
+    ["Phạm Đình Đăng Khoa", "Orders Reports", "F28", "Staff chuyển trạng thái và hệ thống ghi lịch sử"],
     ["Phạm Đình Đăng Khoa", "Orders Reports", "F29", "Dashboard doanh thu và đơn hàng"],
-    ["Phạm Đình Đăng Khoa", "Orders Reports", "F30", "Báo cáo sản phẩm sắp hết hàng"],
+    ["Phạm Đình Đăng Khoa", "Orders Reports", "F30", "Staff hoặc Admin xem sản phẩm sắp hết hàng"],
 ]
 add_table(doc, ["Owner", "Module", "ID", "Chức năng"], function_rows, [4.0, 3.0, 1.2, 8.2])
 doc.add_paragraph("Danh sách F01–F30 là bản đề xuất để giảng viên xác nhận cách tính function. CRUD của cùng một entity thuộc cùng một owner.")
@@ -208,7 +210,7 @@ add_table(doc, ["Thành phần", "Quyết định"], [
     ["Web", "ASP.NET Core MVC, Razor Views và Razor Pages của Identity"],
     ["Runtime", ".NET SDK 10.0.401, khóa bằng global.json"],
     ["Data", "Entity Framework Core 10 và SQL Server 2022 Express"],
-    ["Security", "ASP.NET Core Identity, role Admin và Customer"],
+    ["Security", "ASP.NET Core Identity, role Customer, Staff và Admin; Guest là người chưa xác thực"],
     ["Frontend", "Bootstrap 5 và JavaScript thuần"],
     ["Testing", "xUnit, unit test business rules và integration test với SQL Server test database"],
     ["Collaboration", "GitHub issues, feature branches, pull request review và milestone tags"],
@@ -234,7 +236,7 @@ db_rows = [
     ["OrderItems", "Id bigint IDENTITY PK\nOrderId bigint FK\nProductVariantId int FK\nProductName nvarchar(200)\nSku varchar(50)\nVariantDescription nvarchar(120) NULL\nUnitPrice decimal(18,2)\nQuantity int\nLineTotal decimal(18,2)", "Snapshot sản phẩm và giá lúc mua"],
     ["OrderStatusHistories", "Id bigint IDENTITY PK\nOrderId bigint FK\nOldStatus int\nNewStatus int\nNote nvarchar(500) NULL\nChangedByUserId nvarchar(450) FK NULL\nChangedAt datetime2", "Audit mọi lần đổi trạng thái"],
     ["AspNetUsers", "Id nvarchar(450) PK\nFullName nvarchar(150) NULL\nIsActive bit\nCreatedAt datetime2\nUserName, Email, PasswordHash và các cột Identity", "Identity sinh khóa chuỗi và hash mật khẩu"],
-    ["AspNetRoles", "Id nvarchar(450) PK\nName nvarchar(256)\nNormalizedName nvarchar(256) UQ\nConcurrencyStamp nvarchar(max)", "Role Admin và Customer"],
+    ["AspNetRoles", "Id nvarchar(450) PK\nName nvarchar(256)\nNormalizedName nvarchar(256) UQ\nConcurrencyStamp nvarchar(max)", "Ba role tài khoản Customer, Staff và Admin"],
     ["Identity mapping", "AspNetUserRoles\nAspNetUserClaims\nAspNetRoleClaims\nAspNetUserLogins\nAspNetUserTokens", "Bảng liên kết và xác thực do Identity quản lý"],
 ]
 add_table(doc, ["Bảng", "Cột và kiểu dữ liệu", "Mục đích và ràng buộc"], db_rows, [3.2, 8.0, 5.2])
@@ -246,6 +248,18 @@ add_bullets(doc, [
     "DATA_CREATE.sql tạo schema; DATA_INSERT.sql thêm role và catalog demo có thể chạy lại.",
     "Entity Framework Core được cấu hình ValueGeneratedOnAdd cho toàn bộ khóa số để khớp IDENTITY(1,1)."
 ])
+
+doc.add_heading("5.1 Ma trận quyền", level=2)
+add_table(doc, ["Nghiệp vụ", "Guest", "Customer", "Staff", "Admin"], [
+    ["Xem catalog", "Có", "Có", "Có", "Có"],
+    ["Giỏ hàng và đặt hàng", "Không", "Có", "Không", "Không"],
+    ["Xem và hủy đơn của mình", "Không", "Có", "Không", "Không"],
+    ["Xử lý đơn và cập nhật trạng thái", "Không", "Không", "Có", "Có"],
+    ["Điều chỉnh tồn kho", "Không", "Không", "Có", "Có"],
+    ["Quản lý catalog", "Không", "Không", "Không", "Có"],
+    ["Quản lý tài khoản Staff và phân quyền", "Không", "Không", "Không", "Có"],
+    ["Dashboard và báo cáo tổng hợp", "Không", "Không", "Không", "Có"],
+], [5.8, 2.2, 2.6, 2.6, 2.6])
 
 doc.add_heading("6 Yêu cầu chất lượng", level=1)
 add_table(doc, ["Mục", "Tiêu chí chấp nhận"], [

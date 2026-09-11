@@ -6,7 +6,10 @@ Website bán xe đạp và phụ kiện đơn giản cho môn SWP391. Hệ thố
 
 - Khách xem, tìm kiếm, lọc sản phẩm và chọn biến thể.
 - Thành viên quản lý địa chỉ, giỏ hàng, đặt hàng COD và theo dõi đơn.
-- Admin quản lý catalog, tồn kho, trạng thái đơn và dashboard.
+- Staff xử lý đơn hàng, cập nhật trạng thái và điều chỉnh tồn kho.
+- Admin quản lý catalog, tài khoản nhân viên, phân quyền và dashboard.
+
+Guest là khách chưa đăng nhập nên không được lưu như một role. Ba role tài khoản là `Customer`, `Staff` và `Admin`.
 
 ## Chuẩn bị
 
@@ -44,4 +47,4 @@ Website bán xe đạp và phụ kiện đơn giản cho môn SWP391. Hệ thố
 | CE181481 | Hà Thanh Huy | Lead và customer catalog |
 | CE191113 | Trần Vũ Khang | Cart và checkout |
 | CE170443 | Huỳnh Vương Khánh | Admin catalog và inventory |
-| CE181583 | Phạm Đình Đăng Khoa | Order processing và dashboard |
+| CE181583 | Phạm Đình Đăng Khoa | Staff order processing và admin dashboard |

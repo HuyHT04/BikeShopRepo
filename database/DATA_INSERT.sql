@@ -7,6 +7,9 @@ GO
 IF NOT EXISTS (SELECT 1 FROM dbo.AspNetRoles WHERE NormalizedName = N'ADMIN')
     INSERT dbo.AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
     VALUES (N'ROLE-ADMIN', N'Admin', N'ADMIN', NEWID());
+IF NOT EXISTS (SELECT 1 FROM dbo.AspNetRoles WHERE NormalizedName = N'STAFF')
+    INSERT dbo.AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
+    VALUES (N'ROLE-STAFF', N'Staff', N'STAFF', NEWID());
 IF NOT EXISTS (SELECT 1 FROM dbo.AspNetRoles WHERE NormalizedName = N'CUSTOMER')
     INSERT dbo.AspNetRoles (Id, Name, NormalizedName, ConcurrencyStamp)
     VALUES (N'ROLE-CUSTOMER', N'Customer', N'CUSTOMER', NEWID());
@@ -74,5 +77,5 @@ IF NOT EXISTS (SELECT 1 FROM dbo.InventoryTransactions WHERE Reason = N'INITIAL_
     SELECT Id, StockQuantity, N'INITIAL_STOCK', N'SEED-001' FROM dbo.ProductVariants WHERE StockQuantity > 0;
 GO
 
-PRINT N'Demo roles and catalog data inserted. Create users through ASP.NET Core Identity so passwords are hashed correctly.';
+PRINT N'Admin, Staff, Customer roles and demo catalog data inserted. Guest is an unauthenticated visitor, not a database role. Create users through ASP.NET Core Identity so passwords are hashed correctly.';
 GO

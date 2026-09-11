@@ -1,5 +1,7 @@
 /* BikeShop SWP391 - SQL Server 2022 schema
-   Run with an account allowed to create a database. The script is rerunnable. */
+   Run with an account allowed to create a database. The script is rerunnable.
+   Account roles are Customer, Staff and Admin. Guest means unauthenticated and
+   is therefore not stored in AspNetRoles. Role rows are seeded by DATA_INSERT.sql. */
 
 IF DB_ID(N'BikeShopSWP391') IS NULL
     CREATE DATABASE BikeShopSWP391;
@@ -281,5 +283,5 @@ JOIN dbo.ProductVariants v ON v.ProductId = p.Id
 WHERE p.IsActive = 1 AND v.IsActive = 1 AND v.StockQuantity <= 5;
 GO
 
-PRINT N'BikeShopSWP391 schema is ready.';
+PRINT N'BikeShopSWP391 schema is ready for Customer, Staff and Admin accounts. Run DATA_INSERT.sql to seed the roles.';
 GO
