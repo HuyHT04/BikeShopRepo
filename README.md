@@ -42,7 +42,7 @@ Guest là khách chưa đăng nhập nên không được lưu như một role. 
 ## Nhóm
 
 | Mã sinh viên | Thành viên |
-|---|---|---|
+|---|---|
 | CE180233 | Nguyễn Phước Hậu |
 | CE181481 | Hà Thanh Huy |
 | CE191113 | Trần Vũ Khang |
