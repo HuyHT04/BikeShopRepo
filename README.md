@@ -41,10 +41,10 @@ Guest là khách chưa đăng nhập nên không được lưu như một role. 
 
 ## Nhóm
 
-| Mã sinh viên | Thành viên | Module dự kiến |
+| Mã sinh viên | Thành viên |
 |---|---|---|
-| CE180233 | Nguyễn Phước Hậu | Account và authorization |
-| CE181481 | Hà Thanh Huy | Lead và customer catalog |
-| CE191113 | Trần Vũ Khang | Cart và checkout |
-| CE170443 | Huỳnh Vương Khánh | Admin catalog và inventory |
-| CE181583 | Phạm Đình Đăng Khoa | Staff order processing và admin dashboard |
+| CE180233 | Nguyễn Phước Hậu |
+| CE181481 | Hà Thanh Huy |
+| CE191113 | Trần Vũ Khang |
+| CE170443 | Huỳnh Vương Khánh |
+| CE181583 | Phạm Đình Đăng Khoa |
