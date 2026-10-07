@@ -30,6 +30,6 @@ SWP391 - Application Development Project
 
 | Role | Email | Password |
 |---|---|---|
-| Admin | admin@bikeshop.com | Admin123! |
-| Staff | staff@bikeshop.com | Staff123! |
-| Customer | customer@bikeshop.com | Customer123! |
+| Admin | admin@bikeshop.com | Admin@123 |
+| Staff | staff@bikeshop.com | Staff@123 |
+| Customer | customer@bikeshop.com | Customer@123 |
